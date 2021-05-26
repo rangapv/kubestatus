@@ -42,13 +42,14 @@ component /usr/bin/kubelet
 component kube-proxy 
 component flanneld 
 component dashboard 
+component /usr/bin/dockerd
 
 echo "There are a total \"$counter\" components of k8s running on this Box"
-if [[ $counter > 3 ]]
+if (( $counter >= 3 )) 
 then
   echo "Looks like this is the WOrker Node !!"
 fi
 
 else
-  echo "There are very few componeents related to k8s runnign on this Box - hint k8s is not installed on this Box"
+  echo "There are very few componeents related to k8s running on this Box - hint k8s is not installed on this Box"
 fi
