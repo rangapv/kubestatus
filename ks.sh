@@ -16,6 +16,10 @@ fi
 }
 
 
+master=$(ps -ef | grep kube | grep -v grep | wc -l)
+
+if [[ $master > 5 ]]
+then
 component /usr/bin/kubelet
 component kube-apiserver
 component kube-controller-manager
@@ -30,4 +34,21 @@ echo "There are a total \"$counter\" components of k8s running on this Box"
 if [[ $counter > 6 ]]
 then
   echo "Looks like this is the Master Node !!"
+fi
+
+elif [[ $master < 5 ]]
+then
+component /usr/bin/kubelet
+component kube-proxy 
+component flanneld 
+component dashboard 
+
+echo "There are a total \"$counter\" components of k8s running on this Box"
+if [[ $counter > 3 ]]
+then
+  echo "Looks like this is the WOrker Node !!"
+fi
+
+else
+  echo "There are very few componeents related to k8s runnign on this Box - hint k8s is not installed on this Box"
 fi
