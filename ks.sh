@@ -1,55 +1,58 @@
 #!/bin/bash
-echo "THis is to inform the kubernetes cluster status in this box"
+#Author: twitter-handle: @rangapv
+#        email-id: rangapv@yahoo.com
+echo ""
+echo "THis is to inform \"kubernetes-cluster-status\" in this box"
+echo ""
 counter=0
 component(){
 args1="$@"
 pargs="$#"
 
-
-retr=$(ps -ef | grep $args1 | grep -v grep | wc -l)
+retr=$(ps -ef |grep $args1 | awk '{ split($0,a," ") ; print a[8] }' | grep -v grep | grep $args1 | wc -l)
 if [[ ( $retr = 1 ) ]]
 then
    echo "\"$args1\" is running on this Box"
    ((counter+=1))
 fi
-
 }
 
 
 master=$(ps -ef | grep kube | grep -v grep | wc -l)
 
-if [[ $master > 5 ]]
+if (( $master > 5 )) 
 then
-component /usr/bin/kubelet
-component kube-apiserver
-component kube-controller-manager
-component kube-scheduler
-component etcd 
-component kube-proxy 
-component flanneld 
-component dashboard 
-component /usr/bin/dockerd
-
+mastera=( /usr/bin/kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard /usr/bin/dockerd )
+for i in "${mastera[@]}" 
+do
+	component $i
+done
+	
+echo ""
 echo "There are a total \"$counter\" components of k8s running on this Box"
-if [[ $counter > 6 ]]
+if (( $counter >= 5 )) 
 then
+  echo ""
   echo "Looks like this is the Master Node !!"
+  echo ""
 fi
 
-elif [[ $master < 5 ]]
+elif (( $master < 5 )) 
 then
-component /usr/bin/kubelet
-component kube-proxy 
-component flanneld 
-component dashboard 
-component /usr/bin/dockerd
+nodea=( /usr/bin/kubelet kube-proxy flanneld dashboard /usr/bin/dockerd )
+for j in "${nodea[@]}" 
+do
+	component $j
+done
 
 echo "There are a total \"$counter\" components of k8s running on this Box"
 if (( $counter >= 3 )) 
 then
+  echo ""
   echo "Looks like this is the WOrker Node !!"
+  echo ""
 fi
 
 else
-  echo "There are very few componeents related to k8s running on this Box - hint k8s is not installed on this Box"
+  echo "There are very few components related to k8s running on this Box - hint k8s is not installed on this Box"
 fi
