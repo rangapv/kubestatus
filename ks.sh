@@ -39,7 +39,7 @@ fi
 
 elif (( $master < 5 )) 
 then
-nodea=( /usr/bin/kubelet kube-proxy flanneld dashboard /usr/bin/dockerd )
+nodea=( kubelet kube-proxy flanneld dashboard /usr/bin/dockerd )
 for j in "${nodea[@]}" 
 do
 	component $j
