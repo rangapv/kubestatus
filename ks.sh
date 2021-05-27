@@ -22,7 +22,7 @@ master=$(ps -ef | grep kube | grep -v grep | wc -l)
 
 if (( $master > 5 )) 
 then
-mastera=( /usr/bin/kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard /usr/bin/dockerd )
+mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard dockerd )
 for i in "${mastera[@]}" 
 do
 	component $i
@@ -39,7 +39,7 @@ fi
 
 elif (( $master < 5 )) 
 then
-nodea=( kubelet kube-proxy flanneld dashboard /usr/bin/dockerd )
+nodea=( kubelet kube-proxy flanneld dashboard dockerd )
 for j in "${nodea[@]}" 
 do
 	component $j
