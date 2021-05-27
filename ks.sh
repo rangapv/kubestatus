@@ -37,7 +37,7 @@ then
   echo ""
 fi
 
-elif (( $master < 5 )) 
+elif [[ (( $master < 5 )) && (( $master > 1 )) ]] 
 then
 nodea=( kubelet kube-proxy flanneld dashboard dockerd )
 for j in "${nodea[@]}" 
@@ -54,5 +54,8 @@ then
 fi
 
 else
-  echo "There are very few components related to k8s running on this Box - hint k8s is not installed on this Box"
+  echo ""
+  echo "There are very few components related to kubernetes running on this Box"
+  echo " - hint k8s is NOT-INSTALLED on this Box - "
+  echo ""
 fi
