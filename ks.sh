@@ -5,6 +5,7 @@ echo ""
 echo "THis is to inform \"kubernetes-cluster-status\" in this box"
 echo ""
 counter=0
+status1=0
 component(){
 args1="$@"
 pargs="$#"
@@ -14,6 +15,7 @@ if [[ ( $retr = 1 ) ]]
 then
    echo "\"$args1\" is running on this Box"
    ((counter+=1))
+   status1=1
 fi
 }
 
@@ -22,12 +24,28 @@ master=$(ps -ef | grep kube | grep -v grep | wc -l)
 
 if (( $master > 5 )) 
 then
-mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard dockerd )
+mastera=( kubelet trg kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard dockerd )
+declare -A arr
 for i in "${mastera[@]}" 
 do
 	component $i
+	arr[$i]=$status1
+	status1=0
 done
-	
+for h in "${mastera[@]}"
+do
+	args=arr[$@]
+	args2=arr[$#]
+	int1=0
+        if [[ $h = "kubelet" ]]
+	then
+	        echo ""
+		echo "$h is installed in `which $h`"
+		echo "$h version is `$h --version`"
+	        echo ""
+        fi	   
+done
+
 echo ""
 echo "There are a total \"$counter\" components of k8s running on this Box"
 if (( $counter >= 5 )) 
