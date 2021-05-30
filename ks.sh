@@ -24,7 +24,7 @@ master=$(ps -ef | grep kube | grep -v grep | wc -l)
 
 if (( $master > 5 )) 
 then
-mastera=( kubelet trg kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard dockerd )
+mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard dockerd )
 declare -A arr
 for i in "${mastera[@]}" 
 do
@@ -37,13 +37,21 @@ do
 	args=arr[$@]
 	args2=arr[$#]
 	int1=0
-        if [[ $h = "kubelet" ]]
-	then
-	        echo ""
-		echo "$h is installed in `which $h`"
-		echo "$h version is `$h --version`"
-	        echo ""
-        fi	   
+done
+
+masterb=( kubelet dockerd )
+for n in ${masterb[@]}
+do
+for h in "${mastera[@]}"
+do
+if [[ ( ${h} = "$n" ) && ( ${arr[$h]} -eq 1 ) ]] 
+then
+        echo ""
+	echo "$h is installed in `which $h`"
+	echo "$h version is `$h --version`"
+        echo ""
+fi	   
+done
 done
 
 echo ""
