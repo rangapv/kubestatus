@@ -3,7 +3,7 @@
 #        email-id: rangapv@yahoo.com
 echo ""
 echo "`clear`"
-echo "THis is to inform \"kubernetes-cluster-status\" in this box"
+echo -e "THis is to inform \"kubernetes-cluster-status\" in this box " | cowsay -W95 -f default
 echo ""
 counter=0
 status1=0
