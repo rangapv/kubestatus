@@ -66,9 +66,27 @@ fi
 elif [[ (( $master < 5 )) && (( $master > 1 )) ]] 
 then
 nodea=( kubelet kube-proxy flanneld dashboard dockerd )
+declare -A arrb
 for j in "${nodea[@]}" 
 do
 	component $j
+	arrb[$j]=$status1
+	status1=0
+done
+
+nodeb=( kubelet dockerd )
+for k in ${nodeb[@]}
+do
+for l in "${nodea[@]}"
+do
+if [[ ( ${l} = "$k" ) && ( ${arrb[$l]} -eq 1 ) ]]
+then
+	echo ""
+	echo "$l is installed in `which $l`"
+	echo "$l version is `$l --version`"
+	echo ""
+fi
+done
 done
 
 echo "There are a total \"$counter\" components of k8s running on this Box"
