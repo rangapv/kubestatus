@@ -2,6 +2,7 @@
 #Author: twitter-handle: @rangapv
 #        email-id: rangapv@yahoo.com
 echo ""
+echo "`clear`"
 echo "THis is to inform \"kubernetes-cluster-status\" in this box"
 echo ""
 counter=0
@@ -88,7 +89,6 @@ then
 fi
 done
 done
-
 echo "There are a total \"$counter\" components of k8s running on this Box"
 if (( $counter >= 3 )) 
 then
