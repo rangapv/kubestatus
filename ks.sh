@@ -96,7 +96,8 @@ done
 nodec=( kubelet )
 for v in ${nodec[@]}
 do
-	echo "$v is using `ps -ef | grep $v | grep "\-\-kubeconfig" | awk '{split($0,a,"--kubeconfig="); print a[2]}' | awk '{split($0,a," "); print a[1]}'`"
+#	echo "$v is using `ps -ef | grep $v | grep "\-\-kubeconfig" | awk '{split($0,a,"--kubeconfig"); print a[2]}' | awk '{split($0,a," "); print a[1]}'`"
+	echo "$v is using `ps -ef |grep $v | grep "\-\-kubeconfig" |  awk '{split($0,a,"--kubeconfig"); print a[2]}' | awk '{split($0,a," "); print a[1] " and the Cluster-DNS is " a[3]}'`"
 done
 echo "There are a total \"$counter\" components of k8s running on this Box"
 if (( $counter >= 3 )) 
