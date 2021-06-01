@@ -50,12 +50,16 @@ then
         echo ""
 	echo "$h is installed in `which $h`"
 	echo "$h version is `$h --version`"
-        echo ""
+ 	echo ""
 fi	   
 done
 done
-
-echo ""
+masterc=( kubelet kube-scheduler kube-controller-manager )
+for m in ${masterc[@]}
+do
+	echo "$m is using `ps -ef | grep $m | grep "\-\-kubeconfig" | awk '{split($0,a,"--kubeconfig="); print a[2]}' | awk '{split($0,a," "); print a[1]}'`"
+done
+	echo ""
 echo "There are a total \"$counter\" components of k8s running on this Box"
 if (( $counter >= 5 )) 
 then
@@ -88,6 +92,11 @@ then
 	echo ""
 fi
 done
+done
+nodec=( kubelet )
+for v in ${nodec[@]}
+do
+	echo "$v is using `ps -ef | grep $v | grep "\-\-kubeconfig" | awk '{split($0,a,"--kubeconfig="); print a[2]}' | awk '{split($0,a," "); print a[1]}'`"
 done
 echo "There are a total \"$counter\" components of k8s running on this Box"
 if (( $counter >= 3 )) 
