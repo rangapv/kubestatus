@@ -12,7 +12,7 @@ args1="$@"
 pargs="$#"
 
 retr=$(ps -ef |grep $args1 | awk '{ split($0,a," ") ; print a[8] }' | grep -v grep | grep $args1 | wc -l)
-if [[ ( $retr = 1 ) ]]
+if [[ (( $retr=>1 )) ]]
 then
    echo "\"$args1\" is running on this Box"
    ((counter+=1))
@@ -25,7 +25,7 @@ master=$(ps -ef | grep kube | grep -v grep | wc -l)
 
 if (( $master > 5 )) 
 then
-mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard dockerd )
+mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard dockerd containerd )
 declare -A arr
 for i in "${mastera[@]}" 
 do
@@ -40,7 +40,7 @@ do
 	int1=0
 done
 
-masterb=( kubelet dockerd )
+masterb=( kubelet dockerd containerd)
 for n in ${masterb[@]}
 do
 for h in "${mastera[@]}"
@@ -71,7 +71,7 @@ fi
 
 elif [[ (( $master < 5 )) && (( $master > 1 )) ]] 
 then
-nodea=( kubelet kube-proxy flanneld dashboard dockerd )
+nodea=( kubelet kube-proxy flanneld dashboard dockerd containerd )
 declare -A arrb
 for j in "${nodea[@]}" 
 do
@@ -80,7 +80,7 @@ do
 	status1=0
 done
 
-nodeb=( kubelet dockerd )
+nodeb=( kubelet dockerd containerd )
 for k in ${nodeb[@]}
 do
 for l in "${nodea[@]}"
