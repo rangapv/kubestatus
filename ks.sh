@@ -7,6 +7,7 @@ echo -e "THis is to inform \"kubernetes-cluster-status\" in this box " | cowsay 
 echo ""
 counter=0
 status1=0
+declare -A arra
 
 component(){
 args1="$@"
@@ -22,17 +23,13 @@ fi
 }
 
 nodecomp() {
-
 myarray=("$@")
-declare -A arra
 for i in "${myarray[@]}" 
 do
 	component $i
 	arra[$i]=$status1
 	status1=0
 done
-
-
 }
 
 myversion() {
@@ -42,7 +39,7 @@ for n in ${verarray[@]}
 do
 for h in "${mastera[@]}"
 do
-if [[ ( ${h} = "$n" ) && ( ${arr[$h]} -eq 1 ) ]] 
+if [[ ( ${h} = "$n" ) && ( ${arra[$h]} -eq 1 ) ]] 
 then
         echo ""
 	echo "$h is installed in `which $h`"
@@ -110,7 +107,7 @@ fi
 elif [[ (( $master < 5 )) && (( $master > 1 )) ]] 
 then
 mastera=( kubelet kube-proxy flanneld dashboard dockerd containerd )
-nodecomp "${nodea[@]}"
+nodecomp "${mastera[@]}"
 declare -A arrb
 nodeb=( kubelet dockerd containerd )
 myversion "${nodeb[@]}"
