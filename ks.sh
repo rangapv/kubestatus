@@ -7,6 +7,7 @@ echo -e "THis is to inform \"kubernetes-cluster-status\" in this box " | cowsay 
 echo ""
 counter=0
 status1=0
+
 component(){
 args1="$@"
 pargs="$#"
@@ -20,28 +21,24 @@ then
 fi
 }
 
+nodecomp() {
 
-master=$(ps -ef | grep kube | grep -v grep | wc -l)
-
-if (( $master > 5 )) 
-then
-mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard dockerd containerd )
-declare -A arr
-for i in "${mastera[@]}" 
+myarray=("$@")
+declare -A arra
+for i in "${myarray[@]}" 
 do
 	component $i
-	arr[$i]=$status1
+	arra[$i]=$status1
 	status1=0
 done
-for h in "${mastera[@]}"
-do
-	args=arr[$@]
-	args2=arr[$#]
-	int1=0
-done
 
-masterb=( kubelet dockerd containerd)
-for n in ${masterb[@]}
+
+}
+
+myversion() {
+declare -A arrb
+verarray=("$@")
+for n in ${verarray[@]}
 do
 for h in "${mastera[@]}"
 do
@@ -54,20 +51,21 @@ then
 fi	   
 done
 done
-	echo ""
-echo "There are a total \"$counter\" components of k8s running on this Box"
-if (( $counter >= 5 )) 
-then
-  echo "" 
-  masterc=( kubelet kube-scheduler kube-controller-manager )
-  for m in ${masterc[@]}
+}
+
+
+myconfig() {
+  arrayc=("$@")
+  for m in ${arrayc[@]}
   do
       echo "$m is using `ps -ef | grep $m | grep "\-\-kubeconfig" | awk '{split($0,a,"--kubeconfig="); print a[2]}' | awk '{split($0,a," "); print a[1]}'`"
   done
+}
 
-  echo ""
-  masterd=( kubelet )
-  for m in ${masterd[@]}
+myruntime() {
+  arrayr=("$@")
+
+  for m in ${arrayr[@]}
   do
 	  rnc=`ps -ef | grep "\-\-container-\runtime\-endpoint" | grep -v grep | wc -l`
 	  if [[ $rnc=0 ]]
@@ -77,6 +75,32 @@ then
                   echo "This box is using runtime as  `ps -ef | grep $m | grep "\-\-container-\runtime\-endpoint" | awk '{split($0,a,"--container-runtime-endpoint="); print a[2]}' | awk '{split($0,a," "); print a[1]}'`"
           fi
   done
+
+}
+
+
+
+
+master=$(ps -ef | grep kube | grep -v grep | wc -l)
+
+if (( $master > 5 )) 
+then
+mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard dockerd containerd )
+nodecomp "${mastera[@]}"
+declare -A arr
+masterb=( kubelet dockerd containerd)
+myversion "${masterb[@]}"
+
+echo ""
+echo "There are a total \"$counter\" components of k8s running on this Box"
+if (( $counter >= 5 )) 
+then
+  echo "" 
+  masterc=( kubelet kube-scheduler kube-controller-manager )
+  myconfig "${masterc[@]}" 
+  echo ""
+  masterd=( kubelet )
+  myruntime "${masterd[@]}" 
   echo ""
   echo ""
   echo "Looks like this is the Master Node !!"
@@ -85,51 +109,22 @@ fi
 
 elif [[ (( $master < 5 )) && (( $master > 1 )) ]] 
 then
-nodea=( kubelet kube-proxy flanneld dashboard dockerd containerd )
+mastera=( kubelet kube-proxy flanneld dashboard dockerd containerd )
+nodecomp "${nodea[@]}"
 declare -A arrb
-for j in "${nodea[@]}" 
-do
-	component $j
-	arrb[$j]=$status1
-	status1=0
-done
-
 nodeb=( kubelet dockerd containerd )
-for k in ${nodeb[@]}
-do
-for l in "${nodea[@]}"
-do
-if [[ ( ${l} = "$k" ) && ( ${arrb[$l]} -eq 1 ) ]]
-then
-	echo ""
-	echo "$l is installed in `which $l`"
-	echo "$l version is `$l --version`"
-	echo ""
-fi
-done
-done
+myversion "${nodeb[@]}"
+echo ""
 echo "There are a total \"$counter\" components of k8s running on this Box"
 if (( $counter >= 3 )) 
 then
    echo ""
    nodec=( kubelet )
-   for v in ${nodec[@]}
-   do
-#	echo "$v is using `ps -ef | grep $v | grep "\-\-kubeconfig" | awk '{split($0,a,"--kubeconfig"); print a[2]}' | awk '{split($0,a," "); print a[1]}'`"
-	echo "$v is using `ps -ef |grep $v | grep "\-\-kubeconfig" |  awk '{split($0,a,"--kubeconfig"); print a[2]}' | awk '{split($0,a," "); print a[1] " and the Cluster-DNS is " a[3]}'`"
-  done
+   myconfig "${nodec[@]}"
+	#echo "$v is using `ps -ef |grep $v | grep "\-\-kubeconfig" |  awk '{split($0,a,"--kubeconfig"); print a[2]}' | awk '{split($0,a," "); print a[1] " and the Cluster-DNS is " a[3]}'`"
   echo ""
   noded=( kubelet )
-  for v in ${noded[@]}
-  do
-	  rnc=`ps -ef | grep "\-\-container-\runtime\-endpoint" | grep -v grep | wc -l`
-	  if [[ $rnc=0 ]]
-	  then
-		  echo "This box is using runtime as Docker"
-          else
-                  echo "This box is using runtime as  `ps -ef | grep $m | grep "\-\-container-\runtime\-endpoint" | awk '{split($0,a,"--container-runtime-endpoint="); print a[2]}' | awk '{split($0,a," "); print a[1]}'`"
-          fi
-  done
+  myruntime "${noded[@]}"
   echo ""
   echo "Looks like this is the Worker Node !!"
   echo ""
