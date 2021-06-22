@@ -65,7 +65,7 @@ myruntime() {
   for m in ${arrayr[@]}
   do
 	  rnc=`ps -ef | grep "\-\-container-\runtime\-endpoint" | grep -v grep | wc -l`
-	  if [[ $rnc=0 ]]
+	  if [[ ( $rnc = 0 ) ]]
 	  then
 		  echo "This box is using runtime as Docker"
           else
