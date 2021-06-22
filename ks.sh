@@ -69,7 +69,13 @@ then
   masterd=( kubelet )
   for m in ${masterd[@]}
   do
-    echo "This box is using runtime as  `ps -ef | grep $m | grep "\-\-container-\runtime\-endpoint" | awk '{split($0,a,"--container-runtime-endpoint="); print a[2]}' | awk '{split($0,a," "); print a[1]}'`"
+	  rnc=`ps -ef | grep "\-\-container-\runtime\-endpoint" | grep -v grep | wc -l`
+	  if [[ $rnc=0 ]]
+	  then
+		  echo "This box is using runtime as Docker"
+          else
+                  echo "This box is using runtime as  `ps -ef | grep $m | grep "\-\-container-\runtime\-endpoint" | awk '{split($0,a,"--container-runtime-endpoint="); print a[2]}' | awk '{split($0,a," "); print a[1]}'`"
+          fi
   done
   echo ""
   echo ""
@@ -116,7 +122,13 @@ then
   noded=( kubelet )
   for v in ${noded[@]}
   do
-    echo "This box is using runtime as  `ps -ef | grep $v | grep "\-\-container-\runtime\-endpoint" | awk '{split($0,a,"--container-runtime-endpoint="); print a[2]}' | awk '{split($0,a," "); print a[1]}'`"
+	  rnc=`ps -ef | grep "\-\-container-\runtime\-endpoint" | grep -v grep | wc -l`
+	  if [[ $rnc=0 ]]
+	  then
+		  echo "This box is using runtime as Docker"
+          else
+                  echo "This box is using runtime as  `ps -ef | grep $m | grep "\-\-container-\runtime\-endpoint" | awk '{split($0,a,"--container-runtime-endpoint="); print a[2]}' | awk '{split($0,a," "); print a[1]}'`"
+          fi
   done
   echo ""
   echo "Looks like this is the Worker Node !!"
