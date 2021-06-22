@@ -64,6 +64,14 @@ then
   do
       echo "$m is using `ps -ef | grep $m | grep "\-\-kubeconfig" | awk '{split($0,a,"--kubeconfig="); print a[2]}' | awk '{split($0,a," "); print a[1]}'`"
   done
+
+  echo ""
+  masterd=( kubelet )
+  for m in ${masterd[@]}
+  do
+    echo "This box is using runtime as  `ps -ef | grep $m | grep "\-\-container-\runtime\-endpoint" | awk '{split($0,a,"--container-runtime-endpoint="); print a[2]}' | awk '{split($0,a," "); print a[1]}'`"
+  done
+  echo ""
   echo ""
   echo "Looks like this is the Master Node !!"
   echo ""
@@ -105,7 +113,13 @@ then
 	echo "$v is using `ps -ef |grep $v | grep "\-\-kubeconfig" |  awk '{split($0,a,"--kubeconfig"); print a[2]}' | awk '{split($0,a," "); print a[1] " and the Cluster-DNS is " a[3]}'`"
   done
   echo ""
-  echo "Looks like this is the WOrker Node !!"
+  noded=( kubelet )
+  for v in ${noded[@]}
+  do
+    echo "This box is using runtime as  `ps -ef | grep $v | grep "\-\-container-\runtime\-endpoint" | awk '{split($0,a,"--container-runtime-endpoint="); print a[2]}' | awk '{split($0,a," "); print a[1]}'`"
+  done
+  echo ""
+  echo "Looks like this is the Worker Node !!"
   echo ""
 fi
 
