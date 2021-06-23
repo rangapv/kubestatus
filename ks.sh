@@ -7,6 +7,7 @@ echo -e "THis is to inform \"kubernetes-cluster-status\" in this box " | cowsay 
 echo ""
 counter=0
 status1=0
+nodef=0
 declare -A arra
 
 component(){
@@ -53,10 +54,18 @@ done
 
 myconfig() {
   arrayc=("$@")
+  if [[ ( $nodef = 0 ) ]]
+  then
   for m in ${arrayc[@]}
   do
       echo "$m is using `ps -ef | grep $m | grep "\-\-kubeconfig" | awk '{split($0,a,"--kubeconfig="); print a[2]}' | awk '{split($0,a," "); print a[1]}'`"
   done
+  else
+  for m in ${arrayc[@]}
+  do
+  echo "$m is using `ps -ef | grep $m | grep -v grep | grep -v awk | awk '{split($0,a," ");} a[8] ~ /sudo/ {print $11}'`"
+  done
+  fi
 }
 
 myruntime() {
@@ -106,6 +115,7 @@ fi
 
 elif [[ (( $master < 5 )) && (( $master > 1 )) ]] 
 then
+nodef=1
 mastera=( kubelet kube-proxy flanneld dashboard dockerd containerd )
 nodecomp "${mastera[@]}"
 declare -A arrb
