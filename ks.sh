@@ -1,6 +1,8 @@
 #!/bin/bash
 #Author: twitter-handle: @rangapv
 #        email-id: rangapv@yahoo.com
+source <(curl -s https://raw.githubusercontent.com/rangapv/runtimes/main/checkruntime.sh)
+
 echo ""
 echo "`clear`"
 echo -e "THis is to inform \"kubernetes-cluster-status\" in this box " | cowsay -W95 -f default
@@ -84,7 +86,16 @@ myruntime() {
 
 }
 
+myrunc(){
+if [[ $drun -eq 1 ]]
+then
+	echo "This box is using \"Dockerd\" as the runtime"
+elif [[ $crun -eq 1 ]]
+then
+	echo "This box is using \"COntainerd\" as the runtime"
+fi
 
+}
 
 
 master=$(ps -ef | grep kube | grep -v grep | wc -l)
@@ -106,7 +117,8 @@ then
   myconfig "${masterc[@]}" 
   echo ""
   masterd=( kubelet )
-  myruntime "${masterd[@]}" 
+#  myruntime "${masterd[@]}" 
+  myrunc
   echo ""
   echo ""
   echo "Looks like this is the Master Node !!"
@@ -131,7 +143,8 @@ then
 	#echo "$v is using `ps -ef |grep $v | grep "\-\-kubeconfig" |  awk '{split($0,a,"--kubeconfig"); print a[2]}' | awk '{split($0,a," "); print a[1] " and the Cluster-DNS is " a[3]}'`"
   echo ""
   noded=( kubelet )
-  myruntime "${noded[@]}"
+#  myruntime "${noded[@]}"
+  myrunc
   echo ""
   echo "Looks like this is the Worker Node !!"
   echo ""
