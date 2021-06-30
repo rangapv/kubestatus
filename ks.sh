@@ -54,16 +54,18 @@ done
 }
 
 coreinstall() {
-c="$@"
+c=("$@")
 cc=0
-cw=`which $c1`
-cs= echo "$?"
-for c in ${c[@]}
+for cd in ${c[@]}
 do
+cw=$(which $cd)
+cs="$?"
 if [[ $cs -eq 0 ]]
 then
 	echo "This $c core component is just installed and not running"
 	((cc+=1))
+else
+echo "This $cd core component is not installed" 
 fi
 done
 }
@@ -167,10 +169,10 @@ elif [[ (( $master -eq 0 )) ]]
 then
 core1=( kubeadm kubelet kubectl )
 coreinstall "${core1[@]}"
-if (( $cc > 0 ))
+if [[ $cc > 0 ]]
 then
-	echo "The total core componet of k8s that are installed but not running is $cc"
-elif (( $cc -eq 0 ))
+	echo "The total core componet of k8s that are not running is $cc"
+elif [[ $cc -eq 0 ]] 
 then
   echo "There are very few components related to kubernetes running on this Box"
   echo " - hint k8s is NOT-INSTALLED on this Box - "
