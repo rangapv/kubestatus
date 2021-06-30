@@ -53,6 +53,20 @@ done
 done
 }
 
+coreinstall() {
+c="$@"
+cc=0
+cw=`which $c1`
+cs= echo "$?"
+for c in ${c[@]}
+do
+if [[ $cs -eq 0 ]]
+then
+	echo "This $c core component is just installed and not running"
+	((cc+=1))
+fi
+done
+}
 
 myconfig() {
   arrayc=("$@")
@@ -99,7 +113,6 @@ fi
 
 
 master=$(ps -ef | grep kube | grep -v grep | wc -l)
-
 if (( $master > 5 )) 
 then
 mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard dockerd containerd )
@@ -109,7 +122,7 @@ masterb=( kubelet dockerd containerd)
 myversion "${masterb[@]}"
 
 echo ""
-echo "There are a total \"$counter\" components of k8s running on this Box"
+echo "There are a total \"$counter\" components of k8s on this Box"
 if (( $counter >= 5 )) 
 then
   echo "" 
@@ -150,9 +163,20 @@ then
   echo ""
 fi
 
-else
-  echo ""
+elif [[ (( $master -eq 0 )) ]]
+then
+core1=( kubeadm kubelet kubectl )
+coreinstall "${core1[@]}"
+if (( $cc > 0 ))
+then
+	echo "The total core componet of k8s that are installed but not running is $cc"
+elif (( $cc -eq 0 ))
+then
   echo "There are very few components related to kubernetes running on this Box"
   echo " - hint k8s is NOT-INSTALLED on this Box - "
+fi
+
+else
+  echo ""
   echo ""
 fi
