@@ -81,7 +81,8 @@ myconfig() {
   else
   for m in ${arrayc[@]}
   do
-  echo "$m is using `ps -ef | grep $m | grep -v grep | grep -v awk | awk '{split($0,a," ");} a[8] ~ /sudo/ {print $11}'`"
+  echo "$m is using `ps -ef | grep $m | grep -v grep | grep -v awk | awk '{split($0,a," "); a[8] ~ /kubelet/; print a[10]}' | awk '{split($0,a,"--kubeconfig="); print a[2]}'`"
+  #echo "$m is using `ps -ef | grep $m | grep -v grep | grep -v awk | awk '{split($0,a," "); a[8] ~ /kubelet/; print a[11]}' | awk '{split($0,a,"--kubeconfig="); print a[2]}'`"
   done
   fi
 }
