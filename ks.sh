@@ -176,8 +176,6 @@ fi
 
 elif [[ (( $master < 5 )) && (( $master > 1 )) ]] 
 then
-core1=( kubeadm kubelet kubectl )
-coreinstall "${core1[@]}"
 if [[ $cc -lt 3 ]]
 then
 	echo "The total core componet of k8s that are not running is $cc"
