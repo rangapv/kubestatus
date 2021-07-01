@@ -84,6 +84,10 @@ else
 echo "This $cd core component is not installed" 
 fi
 done
+if [[ $cc -eq 0 ]]
+then
+  echo "None of the core components \"${c[@]}\" are installed "
+fi
 echo ""
 }
 
@@ -137,12 +141,12 @@ fi
 echo ""
 }
 
+core1=( kubeadm kubelet kubectl )
+coreinstall "${core1[@]}"
 
 master=$(ps -ef | grep kube | grep -v grep | wc -l)
 if (( $master > 5 )) 
 then
-core1=( kubeadm kubelet kubectl )
-coreinstall "${core1[@]}"
 if [[ $cc -lt 3 ]]
 then
 	echo "The total core components of k8s that are not running is $cc"
@@ -204,8 +208,6 @@ fi
 
 elif [[ (( $master -eq 0 )) ]]
 then
-core1=( kubeadm kubelet kubectl )
-coreinstall "${core1[@]}"
 if [[ $cc > 0 ]]
 then
 	echo "The total core componet of k8s that are not running is $cc"
