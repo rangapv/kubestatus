@@ -47,11 +47,10 @@ do
 	       nflag=0 
 	 fi
 done
-if [[ $sflag -eq 0 ]]
+if [[ ( $sflag -eq 0) ]]
 then
 echo "All these components $str1 are installed"
-fi
-if [[ $nflag -eq 0 ]]
+elif [[ ( $nflag -eq 0) ]]
 then
 echo "All these components $str4 are NOT installed"
 fi
