@@ -21,7 +21,6 @@ do
      retr=$(ps -ef |grep $i | awk '{ split($0,a," ") ; print a[8] }' | grep -v grep | grep $i | wc -l)
      if [[ (( $retr=>1 )) ]]
      then
-    # echo "\"$i\" is running on this Box"
      ((counter+=1))
      status1=1
      fi
@@ -33,16 +32,21 @@ echo ""
 
 compstat() {
 p=("$@")
+str2=""
+str4=""
 for k in "${p[@]}"
 do
 	 if [[ ${arra[$k]} -eq 1 ]]
 	 then
-		echo "$k is installed"
-	       #	newarray=${arra[p]}
-         else
-		 echo "$k is not installed"
+               str1="$str2,$k"
+	       str2="$str1" 
+        else
+               str3="$str4,$k"
+	       str4="$str3" 
 	 fi
 done
+echo "All these components $str1 are installed"
+echo "All these components $str3 are NOT installed"
 }
 
 myversion() {
