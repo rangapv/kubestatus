@@ -32,21 +32,29 @@ echo ""
 
 compstat() {
 p=("$@")
-str2=""
+str1=""
 str4=""
+sflag=1
+nglag=1
 for k in "${p[@]}"
 do
 	 if [[ ${arra[$k]} -eq 1 ]]
 	 then
-               str1="$str2,$k"
-	       str2="$str1" 
+               str1+="$k,"
+	       sflag=0
         else
-               str3="$str4,$k"
-	       str4="$str3" 
+	       str4+="$k,"
+	       nflag=0 
 	 fi
 done
+if [[ $sflag -eq 0 ]]
+then
 echo "All these components $str1 are installed"
-echo "All these components $str3 are NOT installed"
+fi
+if [[ $nflag -eq 0 ]]
+then
+echo "All these components $str4 are NOT installed"
+fi
 }
 
 myversion() {
