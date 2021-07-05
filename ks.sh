@@ -7,6 +7,7 @@ echo "`clear`"
 echo -e "THis is to inform \"kubernetes-cluster-status\" in this box " | cowsay -W95 -f default
 echo ""
 counter=0
+corecounter=0
 status1=0
 nodef=0
 declare -A arra
@@ -22,6 +23,7 @@ do
      if [[ (( $retr=>1 )) ]]
      then
      ((counter+=1))
+     ((corecounter+=1))
      status1=1
      fi
      arra[$i]=$status1
@@ -49,10 +51,10 @@ do
 done
 if [[ ( $sflag -eq 0) ]]
 then
-echo "All these components $str1 are installed"
+echo "All these components ${str1::-1} are installed"
 elif [[ ( $nflag -eq 0) ]]
 then
-echo "All these components $str4 are NOT installed"
+echo "All these components ${str4::-1} are NOT installed"
 fi
 }
 
@@ -151,8 +153,13 @@ echo ""
 core1=( kubeadm kubelet kubectl )
 coreinstall "${core1[@]}"
 
+
+mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd )
+component "${mastera[@]}"
+
 master=$(ps -ef | grep kube | grep -v grep | wc -l)
-if (( $master > 5 )) 
+
+if [[ (( $corecounter -gt 1 )) ]]
 then
 if [[ $cc -lt 3 ]]
 then
@@ -181,11 +188,11 @@ then
   echo ""
 fi
 
-elif [[ (( $master < 5 )) && (( $master > 1 )) ]] 
+elif [[ (( $corecounter -le 1 )) && (( $master -gt 0 )) ]] 
 then
 if [[ $cc -lt 3 ]]
 then
-	echo "The total core componet of k8s that are not running is $cc"
+	echo "The total core component of k8s that are not running is $cc"
 elif [[ $cc -eq 3 ]]
 then
 	echo "All the core components (\"${core1[@]}\") of k8s are installed"
