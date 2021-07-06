@@ -112,14 +112,17 @@ echo ""
 
 myconfig() {
 echo ""
-  myprint1 Core-Components-Configfiles
+  myprint1 Core-Component-Configfiles
   arrayc=("$@")
+  awk -F: 'BEGIN{printf "%-10s %25s \n","----------","-----------"
+                 printf "%-10s %25s \n","Component","Config-file"
+	         printf "%-10s %25s \n" ,"----------","-----------"}' 
   if [[ ( $nodef = 0 ) ]]
   then
   for m in ${arrayc[@]}
   do
 	  compconfig=(`ps -ef | grep $m | grep "\-\-kubeconfig" | awk '{split($0,a,"--kubeconfig="); print a[2]}' | awk '{split($0,a," "); print a[1]}'`)
-         awk -F: -v config="$compconfig" -v m1="$m" 'BEGIN{ printf "%-10s %-25s \n", m1, config }' 
+         awk -F: -v config="$compconfig" -v m1="$m" 'BEGIN{ printf "%-10s %35s \n", m1, config }' 
   done
   else
   for m in ${arrayc[@]}
@@ -127,7 +130,7 @@ echo ""
 #  echo "$m is using `ps -ef | grep $m | grep -v grep | grep -v awk | awk '{split($0,a," "); a[8] ~ /kubelet/; print a[10]}' | awk '{split($0,a,"--kubeconfig="); print a[2]}'`"
 compconfig=(`ps -ef | grep $m | grep -v grep | grep -v awk | awk '{split($0,a," "); if (a[8]~/kubelet/) for (i=0;i<14;i++) if (a[i]~/--kubeconfig/) print a[i]  a[i+1]}'`)
   #echo "$m is using `ps -ef | grep $m | grep -v grep | grep -v awk | awk '{split($0,a," "); a[8] ~ /kubelet/; print a[11]}' | awk '{split($0,a,"--kubeconfig="); print a[2]}'`"
-         awk -F: -v config="$compconfig" -v m1="$m" 'BEGIN{ printf "%-10s %-25s \n", m1, config }' 
+         awk -F: -v config="$compconfig" -v m1="$m" 'BEGIN{ printf "%-10s %35s \n", m1, config }' 
   done
   fi
 echo ""
@@ -217,6 +220,7 @@ then
   masterd=( kubelet )
 #  myruntime "${masterd[@]}" 
   myrunc
+  myprint1 Node-Status
   echo "Looks like this is the Master Node !!"
   echo ""
 fi
@@ -247,6 +251,7 @@ then
   noded=( kubelet )
 #  myruntime "${noded[@]}"
   myrunc
+  myprint1 Node-Status
   echo "Looks like this is the Worker Node !!"
   echo ""
 fi
@@ -257,6 +262,7 @@ if [[ $cc > 0 ]]
 then
 	echo "The total core componet of k8s that are not running is $cc"
 else  
+  myprint1 Node-Status
   echo "There are very few components related to kubernetes running on this Box"
   echo " - hint k8s is NOT-INSTALLED on this Box - "
 fi
