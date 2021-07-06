@@ -65,6 +65,9 @@ echo ""
 declare -A arrb
 verarray=("$@")
 myprint1 Component-Version
+#myprint1 $h
+awk -F: 'BEGIN{printf "%-10s %-25s %-50s \n", "Component   ", "Install-Path", "Version-Info"
+               printf "%-10s %-25s %-50s \n", "------------", "------------", "------------"}'
 for n in ${verarray[@]}
 do
 for h in "${mastera[@]}"
@@ -75,10 +78,7 @@ then
 #	echo "$h version is `$h --version`"
         whch=`which $h`
 	whv=`$h --version`
-	myprint1 $h
-        awk -F: 'BEGIN{printf "%-10s %25s \n", "Install-Path", "Version-Info"
-                       printf "%-10s %25s \n", "------------", "------------"}'
-        awk -F: -v h1="$whch" -v whv="$whv" 'BEGIN{printf "%-10s %25s \n" , h1,  whv}'
+        awk -F: -v h2="$h" -v h1="$whch" -v whv="$whv" 'BEGIN{printf "%-10s %-25s %-50s \n" , h2, h1, whv}'
 
 fi	   
 done
@@ -114,15 +114,15 @@ myconfig() {
 echo ""
   myprint1 Core-Component-Configfiles
   arrayc=("$@")
-  awk -F: 'BEGIN{printf "%-10s %25s \n","----------","-----------"
-                 printf "%-10s %25s \n","Component","Config-file"
-	         printf "%-10s %25s \n" ,"----------","-----------"}' 
+  awk -F: 'BEGIN{printf "%-10s %-25s \n","----------","-----------"
+                 printf "%-10s %-25s \n","Component","Config-file"
+	         printf "%-10s %-25s \n" ,"----------","-----------"}' 
   if [[ ( $nodef = 0 ) ]]
   then
   for m in ${arrayc[@]}
   do
 	  compconfig=(`ps -ef | grep $m | grep "\-\-kubeconfig" | awk '{split($0,a,"--kubeconfig="); print a[2]}' | awk '{split($0,a," "); print a[1]}'`)
-         awk -F: -v config="$compconfig" -v m1="$m" 'BEGIN{ printf "%-10s %35s \n", m1, config }' 
+         awk -F: -v config="$compconfig" -v m1="$m" 'BEGIN{ printf "%-10s %-25s \n", m1, config }' 
   done
   else
   for m in ${arrayc[@]}
@@ -130,7 +130,7 @@ echo ""
 #  echo "$m is using `ps -ef | grep $m | grep -v grep | grep -v awk | awk '{split($0,a," "); a[8] ~ /kubelet/; print a[10]}' | awk '{split($0,a,"--kubeconfig="); print a[2]}'`"
 compconfig=(`ps -ef | grep $m | grep -v grep | grep -v awk | awk '{split($0,a," "); if (a[8]~/kubelet/) for (i=0;i<14;i++) if (a[i]~/--kubeconfig/) print a[i]  a[i+1]}'`)
   #echo "$m is using `ps -ef | grep $m | grep -v grep | grep -v awk | awk '{split($0,a," "); a[8] ~ /kubelet/; print a[11]}' | awk '{split($0,a,"--kubeconfig="); print a[2]}'`"
-         awk -F: -v config="$compconfig" -v m1="$m" 'BEGIN{ printf "%-10s %35s \n", m1, config }' 
+         awk -F: -v config="$compconfig" -v m1="$m" 'BEGIN{ printf "%-10s %-25s \n", m1, config }' 
   done
   fi
 echo ""
