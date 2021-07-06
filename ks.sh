@@ -52,11 +52,15 @@ done
 if [[ ( $sflag -eq 0) ]]
 then
 	myprint1 Installed-Components
-echo "All these components ${str1::-1} are installed"
+echo "All these components are installed"
+echo ""
+echo "$str1" |  awk '{split($0,a,","); for (i=1;i<length(a);i=i+2) print a[i] "," a[i+1]; print "Total = " length(a)-1 }'
 elif [[ ( $nflag -eq 0) ]]
 then
 	myprint1 Missing-Components
-echo "All these components ${str4::-1} are NOT installed"
+echo "All these components are NOT installed"
+echo ""
+echo "$str1" |  awk '{split($0,a,","); for (i=1;i<length(a);i=i+2) print a[i] "," a[i+1]; print "Total = " length(a)-1 }'
 fi
 }
 
