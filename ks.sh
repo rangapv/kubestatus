@@ -214,9 +214,9 @@ then
  myversion "${masterb[@]}"
 
  echo "There are a total \"$counter\" components of k8s on this Box"
- mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard dockerd containerd )
- component "${mastera[@]}"
- compstat "${mastera[@]}"
+# mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard dockerd containerd )
+# component "${mastera[@]}"
+# compstat "${mastera[@]}"
  if [[ (( $counter -ge 5 )) ]]
  then
   masterc=( kubelet kube-scheduler kube-controller-manager )
