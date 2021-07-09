@@ -199,7 +199,6 @@ then
  
  if [[ (( $corecounter -gt 6 )) ]]
  then
-
  declare -A arr
  masterb=( kubelet dockerd containerd)
  myversion "${masterb[@]}"
@@ -220,7 +219,7 @@ then
  declare -A arrb
  nodeb=( kubelet dockerd containerd )
  myversion "${nodeb[@]}"
- if [[ (( $counter -ge 3 )) ]]
+ if [[ (( $counter -ge 2 )) ]]
  then
   nodec=( kubelet )
   myconfig "${nodec[@]}"
