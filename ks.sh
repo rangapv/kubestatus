@@ -139,23 +139,6 @@ compconfig=(`ps -ef | grep $m | grep -v grep | grep -v awk | awk '{split($0,a," 
 echo ""
 }
 
-myruntime() {
-  arrayr=("$@")
-echo ""
-  for m in ${arrayr[@]}
-  do
-	  rnc=`ps -ef | grep "\-\-container-\runtime\-endpoint" | grep -v grep | wc -l`
-	  if [[ ( $rnc = 0 ) ]]
-	  then
-		  echo "This box is using runtime as Docker"
-          else
-                  echo "This box is using runtime as  `ps -ef | grep $m | grep "\-\-container-\runtime\-endpoint" | awk '{split($0,a,"--container-runtime-endpoint="); print a[2]}' | awk '{split($0,a," "); print a[1]}'`"
-          fi
-  done
-echo ""
-
-}
-
 myrunc(){
   myprint1 Container-Runtime
 if [[ $drun -eq 1 ]]
@@ -220,16 +203,10 @@ then
  declare -A arr
  masterb=( kubelet dockerd containerd)
  myversion "${masterb[@]}"
-
-# mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard dockerd containerd )
-# component "${mastera[@]}"
-# compstat "${mastera[@]}"
  if [[ (( $counter -ge 5 )) ]]
  then
   masterc=( kubelet kube-scheduler kube-controller-manager )
   myconfig "${masterc[@]}" 
-#  masterd=( kubelet )
-#  myruntime "${masterd[@]}" 
   myprint1 Node-Status
   coreprint
   echo "There are a total \"$counter\" components of k8s installed on this Box"
@@ -240,9 +217,6 @@ then
  elif [[ (( $corecounter -gt 0 )) && (( $corecounter -lt 6 )) ]] 
  then
  nodef=1
- mastera=( kubelet kube-proxy flanneld dashboard dockerd containerd )
- component "${mastera[@]}"
- compstat "${mastera[@]}"
  declare -A arrb
  nodeb=( kubelet dockerd containerd )
  myversion "${nodeb[@]}"
