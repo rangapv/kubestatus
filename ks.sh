@@ -51,12 +51,12 @@ do
 done
 if [[ ( $sflag -eq 0) ]]
 then
-	myprint1 Installed-Components
+	myprint1 Running-Components
 echo ""
 echo "$str1" |  awk '{split($0,a,","); for (i=1;i<length(a);i=i+2) print a[i] "," a[i+1]; print "Total = " length(a)-1 }'
 elif [[ ( $nflag -eq 0) ]]
 then
-	myprint1 Missing-Components
+	myprint1 Not-running-Components
 echo "All these components are NOT installed"
 echo ""
 echo "$str1" |  awk '{split($0,a,","); for (i=1;i<length(a);i=i+2) print a[i] "," a[i+1]; print "Total = " length(a)-1 }'
@@ -184,7 +184,15 @@ awk -F: -v c1="$cl1" 'BEGIN{printf "%-12s %-15s \n","--------","------------"
                 printf "%-12s %-15s \n","-------","-------------"}' 
 	}
 
-
+coreprint() {
+  if [[ $cc -lt 3 ]]
+  then
+	echo "The total core component of k8s that are not running is $cc"
+  elif [[ $cc -eq 3 ]]
+  then
+	echo "All the core components (\"${core1[@]}\") of k8s are installed"
+  fi
+}
 
 core1=( kubeadm kubelet kubectl )
 myprint1 Core-Statistics 
@@ -213,7 +221,6 @@ then
  masterb=( kubelet dockerd containerd)
  myversion "${masterb[@]}"
 
- echo "There are a total \"$counter\" components of k8s on this Box"
 # mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard dockerd containerd )
 # component "${mastera[@]}"
 # compstat "${mastera[@]}"
@@ -224,19 +231,14 @@ then
 #  masterd=( kubelet )
 #  myruntime "${masterd[@]}" 
   myprint1 Node-Status
+  coreprint
+  echo "There are a total \"$counter\" components of k8s installed on this Box"
   echo "Looks like this is the Master Node !!"
   echo ""
  fi
 
  elif [[ (( $corecounter -gt 0 )) && (( $corecounter -lt 6 )) ]] 
  then
- if [[ $cc -lt 3 ]]
- then
-	echo "The total core component of k8s that are not running is $cc"
- elif [[ $cc -eq 3 ]]
- then
-	echo "All the core components (\"${core1[@]}\") of k8s are installed"
- fi
  nodef=1
  mastera=( kubelet kube-proxy flanneld dashboard dockerd containerd )
  component "${mastera[@]}"
@@ -244,12 +246,13 @@ then
  declare -A arrb
  nodeb=( kubelet dockerd containerd )
  myversion "${nodeb[@]}"
- echo "There are a total \"$counter\" components of k8s running on this Box"
  if [[ (( $counter -ge 3 )) ]]
  then
   nodec=( kubelet )
   myconfig "${nodec[@]}"
   myprint1 Node-Status
+  coreprint
+  echo "There are a total \"$counter\" components of k8s installed on this Box"
   echo "Looks like this is the Worker Node !!"
   echo ""
  fi
@@ -259,6 +262,7 @@ echo "The total core components of k8s that are not running is $cc"
 #if [[ (( $corecounter -eq 0 )) && (( $master -eq 0 )) ]]
 #then
   myprint1 Node-Status
+  coreprint
   echo "There are very few components related to kubernetes running on this Box"
   echo " - hint k8s is NOT-INSTALLED on this Box - "
 fi
