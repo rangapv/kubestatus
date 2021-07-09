@@ -187,7 +187,7 @@ awk -F: -v c1="$cl1" 'BEGIN{printf "%-12s %-15s \n","--------","------------"
 coreprint() {
   if [[ $cc -lt 3 ]]
   then
-	echo "The total core component of k8s that are not running is $cc"
+	  echo "The total core component of k8s that are not installed is $(( 3-$cc ))"
   elif [[ $cc -eq 3 ]]
   then
 	echo "All the core components (\"${core1[@]}\") of k8s are installed"
@@ -258,7 +258,6 @@ then
  fi
  fi
 else
-echo "The total core components of k8s that are not running is $cc"
 #if [[ (( $corecounter -eq 0 )) && (( $master -eq 0 )) ]]
 #then
   myprint1 Node-Status
