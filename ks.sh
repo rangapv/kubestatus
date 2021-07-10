@@ -144,12 +144,21 @@ myrunc(){
 if [[ $drun -eq 1 ]]
 then
 	echo "This box is using \"Dockerd\" as the runtime"
+        if [[ (( $dnrun -eq 1 )) ]]
+	then
+		echo "But it is NOT-running"
+	fi
 elif [[ $crun -eq 1 ]]
 then
 	echo "This box is using \"Containerd\" as the runtime"
+        if [[ (( $cnrun -eq 1 )) ]]
+	then
+		echo "But it is NOT-running"
+	fi
 else
 	echo "No suitable runtime for container available"
 fi
+
 }
 
 myprint1() {
