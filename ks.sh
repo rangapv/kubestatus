@@ -208,7 +208,7 @@ then
   myconfig "${masterc[@]}" 
   myprint1 Node-Status
   coreprint
-  echo "There are a total \"$counter\" components of k8s installed on this Box"
+  echo "There are a total \"$counter\" components of k8s running on this Box"
   echo "Looks like this is the Master Node !!"
   echo ""
  fi
@@ -225,7 +225,7 @@ then
   myconfig "${nodec[@]}"
   myprint1 Node-Status
   coreprint
-  echo "There are a total \"$counter\" components of k8s installed on this Box"
+  echo "There are a total \"$counter\" components of k8s running on this Box"
   echo "Looks like this is the Worker Node !!"
   echo ""
  fi
