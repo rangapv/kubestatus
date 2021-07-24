@@ -4,7 +4,7 @@
 source <(curl -s https://raw.githubusercontent.com/rangapv/runtimes/main/checkruntime.sh)
 
 echo "`clear`"
-echo -e "THis is to inform \"kubernetes-cluster-status\" in this box " | cowsay -W95 -f default
+echo -e "This is to inform \"kubernetes-cluster-status\" in this box " | cowsay -W95 -f default
 echo ""
 counter=0
 corecounter=0
@@ -61,6 +61,21 @@ echo "All these components are NOT installed"
 echo ""
 echo "$str1" |  awk '{split($0,a,","); for (i=1;i<length(a);i=i+2) print a[i] "," a[i+1]; print "Total = " length(a)-1 }'
 fi
+}
+
+mycni() {
+cni=("$@")
+myprint1 Cluster-CNI
+for c in "${cni[@]}"
+do
+c1=`ps -ef | grep $c | grep -v grep | wc -l`
+	if [[ ( $c1 -gt 0 ) ]]
+	then
+		echo "$c is up and running"
+	fi
+
+done
+
 }
 
 myversion() {
@@ -187,6 +202,7 @@ coreprint() {
 }
 
 core1=( kubeadm kubelet kubectl )
+cnil=( calico flannel )
 myprint1 Core-Statistics 
 myprint
 coreinstall "${core1[@]}"
@@ -214,7 +230,8 @@ then
  if [[ (( $counter -ge 5 )) ]]
  then
   masterc=( kubelet kube-scheduler kube-controller-manager )
-  myconfig "${masterc[@]}" 
+  myconfig "${masterc[@]}"
+  mycni "${cnil[@]}" 
   myprint1 Node-Status
   coreprint
   echo "There are a total \"$counter\" components of k8s running on this Box"
@@ -232,6 +249,7 @@ then
  then
   nodec=( kubelet )
   myconfig "${nodec[@]}"
+  mycni "${cnil[@]}" 
   myprint1 Node-Status
   coreprint
   echo "There are a total \"$counter\" components of k8s running on this Box"
