@@ -109,6 +109,18 @@ done
 
 }
 
+mycloud() {
+
+myc=`cat /sys/hypervisor/uuid`
+myc1=`echo "$myc" | sed -En "/^ec2/p"` 
+
+if [[ ! -z "$myc1" ]]
+then
+    echo " IT is AWS Cloud "
+fi    
+
+}
+
 myversion() {
 echo ""
 declare -A arrb
@@ -246,6 +258,11 @@ myrunc
 #mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd )
 #myprint1 Component-Statistics 
 #component "${mastera[@]}"
+
+myprint1 Cloud-Environment
+mycloud
+
+
 
 master=$(ps -ef | grep kube | grep -v grep | grep -v vi | wc -l)
 
