@@ -64,11 +64,11 @@ fi
 }
 
 bgpstatus() {
-   bgp=`which calcioctl`
+   bgp=`which calicoctl`
    bgps="$?"
    if [[ (( $bgps -eq 0 )) ]]
    then
-	   clac=`sudo calicoctl status nodes`
+	   clac=`sudo calicoctl node status`
 	   echo "$clac"
    fi
 
