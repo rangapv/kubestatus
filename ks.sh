@@ -83,7 +83,7 @@ do
 c1=`ps -ef | grep $c | grep -v grep | wc -l`
 	if [[ ( $c1 -gt 0 ) ]]
 	then
-          if [[ $c="calcio" ]]
+          if [[ $c == "calico" ]]
 	  then 
 	   c2=`ps -ef | grep felix | grep -v grep | wc -l`
 	   c3=`ps -ef |grep confd | grep -v grep | wc -l`  
