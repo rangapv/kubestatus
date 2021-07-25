@@ -63,6 +63,18 @@ echo "$str1" |  awk '{split($0,a,","); for (i=1;i<length(a);i=i+2) print a[i] ",
 fi
 }
 
+bgpstatus() {
+   bgp=`which calcioctl`
+   bgps="$?"
+   if [[ (( $bgps -eq 0 )) ]]
+   then
+	   clac=`sudo calicoctl status nodes`
+	   echo "$clac"
+   fi
+
+}
+
+
 mycni() {
 cni=("$@")
 myprint1 Cluster-CNI
@@ -71,7 +83,26 @@ do
 c1=`ps -ef | grep $c | grep -v grep | wc -l`
 	if [[ ( $c1 -gt 0 ) ]]
 	then
-		echo "$c is up and running"
+          if [[ $c="calcio" ]]
+	  then 
+	   c2=`ps -ef | grep felix | grep -v grep | wc -l`
+	   c3=`ps -ef |grep confd | grep -v grep | wc -l`  
+           c4=`ps -ef |grep allocate-tunnel-addrs | grep -v grep | wc -l`
+
+	   if [[ (( $c2 -gt 0 )) && (( $c3 -gt 0 )) && (( $c4 -gt 0 )) ]]
+	   then
+		   echo  "All the core process of calico IPIP with BGP peering are Up and Running"
+	           bgpstatus
+	   elif [[ (( $c2 -gt 0 )) && (( $c4 -gt 0 )) ]]
+	   then
+		   echo "All the core process of calico with VXLAN as overlay is up and running\n"
+		   echo "Hence no BGP peering allowed in this configuration ....to enable change to IPIP overlay"
+           else
+		  echo "The process related to calico that are running are "
+	   fi
+         else
+		 echo "$c is up and running"
+         fi
 	fi
 
 done
@@ -200,6 +231,10 @@ coreprint() {
 	echo "All the core components (\"${core1[@]}\") of k8s are installed"
   fi
 }
+
+
+
+
 
 core1=( kubeadm kubelet kubectl )
 cnil=( calico flannel )
