@@ -111,12 +111,19 @@ done
 
 mycloud() {
 
+mydmia=`sudo dmidecode -s system-uuid | sed -En "/^ec2/p"`
 myc=`cat /sys/hypervisor/uuid`
 myc1=`echo "$myc" | sed -En "/^ec2/p"` 
+mycg=`sudo dmidecode -s system-product-name | grep "Google Compute Engine"`
 
-if [[ ! -z "$myc1" ]]
+if [[ ( ! -z "$myc1" ) && ( ! -z "$mydmia" ) ]]
 then
     echo " IT is AWS Cloud "
+elif [[ ! -z "$mycg" ]]
+then
+    echo "IT is Google Cloud Platform (GCP)"
+else
+    echo "Cannot determine the Cloud Platform"
 fi    
 
 }
