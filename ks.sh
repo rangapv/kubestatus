@@ -111,9 +111,9 @@ done
 
 mycloud() {
 
-mydmia=`sudo dmidecode -s system-uuid | sed -En "/^ec2/p"`
+mydmia=`sudo dmidecode -s system-uuid | sed -En "/^ec2/Ip"`
 myc=`cat /sys/hypervisor/uuid`
-myc1=`echo "$myc" | sed -En "/^ec2/p"` 
+myc1=`echo "$myc" | sed -En "/^ec2/Ip"` 
 mycg=`sudo dmidecode -s system-product-name | grep "Google Compute Engine"`
 
 if [[ ( ! -z "$myc1" ) && ( ! -z "$mydmia" ) ]]
