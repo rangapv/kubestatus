@@ -251,6 +251,17 @@ coreprint() {
   fi
 }
 
+bpf() {
+bpf1=`ps -ef | grep bpf | grep -v grep | wc -l`
+
+if [[ $bpf1 -gt 0 ]]
+then
+	myprint1 Observability
+	echo "BPF is running, telemetrics is getting collected" 
+	echo "probalby PIXIE is installed in the Cluster"
+        
+fi
+}
 
 
 
@@ -268,7 +279,7 @@ myrunc
 
 myprint1 Cloud-Environment
 mycloud
-
+bpf
 
 
 master=$(ps -ef | grep kube | grep -v grep | grep -v vi | wc -l)
