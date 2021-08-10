@@ -64,7 +64,7 @@ fi
 }
 
 bgpstatus() {
-   bgp=`which calicoctl`
+   bgp=`which calicoctl >>/dev/null 2>&1`
    bgps="$?"
    if [[ (( $bgps -eq 0 )) ]]
    then
@@ -160,14 +160,14 @@ cc=0
 echo ""
 for cd in ${c[@]}
 do
-cw=$(which $cd)
+cw=$(which $cd >>/dev/null 2>&1)
 cs="$?"
 if [[ (( $cs -eq 0 )) ]]
 then
 	awk -v a="$cd" -v b="$cw" 'BEGIN{ printf "%-12s %-15s \n",a, b}'
 	((cc+=1))
 else
-	echo "This $cd core component is not installed"
+	echo " \"$cd\" core component is not installed"
 fi
 done
 if [[ (( $cc -eq 0 )) ]]
