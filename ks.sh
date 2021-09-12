@@ -55,12 +55,13 @@ then
 	myprint1 Running-Components
 echo ""
 echo "$str1" |  awk '{split($0,a,","); for (i=1;i<length(a);i=i+2) print a[i] "," a[i+1]; print "Total = " length(a)-1 }'
-elif [[ ( $nflag -eq 0) ]]
+fi
+if [[ ( $nflag -eq 0) ]]
 then
 	myprint1 Not-running-Components
-echo "All these components are NOT installed"
+echo "All these components are NOT RUNNING"
 echo ""
-echo "$str1" |  awk '{split($0,a,","); for (i=1;i<length(a);i=i+2) print a[i] "," a[i+1]; print "Total = " length(a)-1 }'
+echo "$str4" |  awk '{split($0,a,","); for (i=1;i<length(a);i=i+2) print a[i] "," a[i+1]; print "Total = " length(a)-1 }'
 fi
 }
 
@@ -236,12 +237,15 @@ echo ""
 
 myrunc(){
   myprint1 Container-Runtime
+  runcheck=1
 if [[ $drun -eq 1 ]]
 then
 	echo "This box is using \"Dockerd\" as the runtime"
         if [[ (( $dnrun -eq 1 )) ]]
 	then
 		echo "But it is NOT-running"
+	else
+		runcheck=0
 	fi
 elif [[ $crun -eq 1 ]]
 then
@@ -249,6 +253,8 @@ then
         if [[ (( $cnrun -eq 1 )) ]]
 	then
 		echo "But it is NOT-running"
+	else
+		runcheck=0
 	fi
 else
 	echo "No suitable runtime for container available"
@@ -313,14 +319,16 @@ myrunc
 myprint1 Cloud-Environment
 mycloud
 bpf
-
+if [[ (( $runcheck -eq 0 )) ]]
+then
 
 master=$(ps -ef | grep kube | grep -v grep | grep -v vi | wc -l)
 
 if [[ (( $cc -eq 3 )) ]]
 then
  #mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd )
- mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard dockerd containerd )
+ mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard )
+ #mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard dockerd containerd )
  myprint1 Component-Statistics 
  component "${mastera[@]}"
  compstat "${mastera[@]}"
@@ -362,6 +370,12 @@ then
   echo "Looks like this is the Worker Node !!"
   echo ""
  fi
+ elif [[ (( $corecounter -eq 0 )) && (( $runcheck -eq 0 )) ]]
+ then
+         myprint1 Node-Status
+         echo "The core components are Installed and the Runtime is up and running "
+         echo "BUT NO OTHER k8s process is running"
+         echo "Its a partial Cluster Install/Cluster is shutdown"
  fi
 else
 #if [[ (( $corecounter -eq 0 )) && (( $master -eq 0 )) ]]
@@ -370,4 +384,8 @@ else
   coreprint
   echo "There are very few components related to kubernetes running on this Box"
   echo " - hint k8s is NOT-INSTALLED on this Box - "
+fi
+else
+	myprint1 Node-Status
+	echo "The Cluster runtime is not ready"
 fi
