@@ -158,23 +158,29 @@ echo ""
 
 mycompversion() {
 echo ""
-x="\n"
-#mycc=("$@")
+awk -F: 'BEGIN{printf "%-10s %-35s \n", "Component   ", "Version-Info"
+               printf "%-10s %-35s \n", "------------", "------------------------"}'
 if [[ ( "$#" -eq 0 ) ]] 
 then
+	
 for n in "${!mycomp[@]}"
 do
 	v=`$n ${mycomp[$n]}`
-	printf "The component $n \n is version $v \n"
+        awk -F: -v h2="$n" -v h1="$v" 'BEGIN{printf "%-10s %-35s \n" , h2, h1}'
+        printf "\n"
+	#printf "The component $n \n is version $v \n"
 done
 else
 mycv=("$@")
 for n in "${mycv[@]}"
 do
 	v=`$n ${mycomp[$n]}`
-	printf "The component $n \n is version $v \n"
+        awk -F: -v h2="$n" -v h1="$v" 'BEGIN{printf "%-10s %-35s \n" , h2, h1}'
+        printf "\n"
+	#printf "The component $n \n is version $v \n"
 done
 fi
+
 }
 
 
