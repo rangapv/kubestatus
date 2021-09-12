@@ -357,7 +357,7 @@ then
  declare -A arrb
  nodeb=( kubelet dockerd containerd )
  myversion "${nodeb[@]}"
- if [[ (( $counter -ge 2 )) ]]
+ if [[ (( $counter -ge 1 )) ]]
  then
   nodec=( kubelet )
   myconfig "${nodec[@]}"
