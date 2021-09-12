@@ -1,8 +1,8 @@
 #!/bin/bash
 #Author: twitter-handle: @rangapv
 #        email-id: rangapv@yahoo.com
+set -E
 source <(curl -s https://raw.githubusercontent.com/rangapv/runtimes/main/checkruntime.sh)
-
 echo "`clear`"
 echo -e "This is to inform \"kubernetes-cluster-status\" in this box " | cowsay -W95 -f default
 echo ""
@@ -11,6 +11,7 @@ corecounter=0
 status1=0
 nodef=0
 declare -A arra
+declare -A mycomp
 
 component() {
 echo ""
@@ -154,6 +155,29 @@ done
 echo ""
 }
 
+
+mycompversion() {
+echo ""
+x="\n"
+#mycc=("$@")
+if [[ ( "$#" -eq 0 ) ]] 
+then
+for n in "${!mycomp[@]}"
+do
+	v=`$n ${mycomp[$n]}`
+	printf "The component $n \n is version $v \n"
+done
+else
+mycv=("$@")
+for n in "${mycv[@]}"
+do
+	v=`$n ${mycomp[$n]}`
+	printf "The component $n \n is version $v \n"
+done
+fi
+}
+
+
 coreinstall() {
 c=("$@")
 cc=0
@@ -268,6 +292,9 @@ fi
 
 core1=( kubeadm kubelet kubectl )
 cnil=( calico flannel )
+mycomp[kubeadm]="version"
+mycomp[kubectl]="version"
+mycomp[kubelet]="--version"
 myprint1 Core-Statistics 
 myprint
 coreinstall "${core1[@]}"
@@ -301,6 +328,7 @@ then
  then
   masterc=( kubelet kube-scheduler kube-controller-manager )
   myconfig "${masterc[@]}"
+  mycompversion 
   mycni "${cnil[@]}" 
   myprint1 Node-Status
   coreprint
@@ -320,6 +348,8 @@ then
   nodec=( kubelet )
   myconfig "${nodec[@]}"
   mycni "${cnil[@]}" 
+  mycvf=( kubelet kubectl )
+  mycompversion "${mycvf[@]}" 
   myprint1 Node-Status
   coreprint
   echo "There are a total \"$counter\" components of k8s running on this Box"
