@@ -39,7 +39,7 @@ p=("$@")
 str1=""
 str4=""
 sflag=1
-nglag=1
+nflag=1
 for k in "${p[@]}"
 do
 	 if [[ ${arra[$k]} -eq 1 ]]
