@@ -21,6 +21,7 @@ echo ""
 args1="$@"
 pargs="$#"
 myarray=("$@")
+status1=0
 for i in "${myarray[@]}" 
 do
      retr=$(ps -ef |grep $i | awk '{ split($0,a," ") ; print a[8] }' | grep -v grep | grep $i | wc -l)
@@ -36,7 +37,8 @@ do
        rets=$(ps -ef |grep $k | awk '{ split($0,a," ") ; print a[8] }' | grep -v grep | grep $k | wc -l)
        if  [[ (( $rets -ge 1 )) ]]
        then 
-          compverr[$k]=$status1
+             status1=1
+     	     compverr[$k]=$status1
        fi
      done
      status1=0
