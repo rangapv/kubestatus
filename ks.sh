@@ -5,7 +5,7 @@ set -E
 source <(curl -s https://raw.githubusercontent.com/rangapv/bash-source/main/s1.sh) > /dev/null 2>&1
 source <(curl -s https://raw.githubusercontent.com/rangapv/runtimes/main/checkruntime.sh) > /dev/null 2>&1
 echo "`clear`"
-echo -e "This is to inform \"kubernetes-cluster-status\" in this box " | cowsay -W95 -f default
+echo -e "This is to inform \"kubernetes-cluster-status\" in this box " | cowsay -W95 -f default 2> /dev/null
 echo ""
 counter=0
 corecounter=0
