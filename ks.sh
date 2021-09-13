@@ -96,9 +96,11 @@ myprint1 Cluster-CNI
 for c in "${cni[@]}"
 do
 c1=`ps -ef | grep $c | grep -v grep | wc -l`
-	if [[ ( $c1 -gt 0 ) ]]
+cns=`sudo grep -r "$c" /etc/cni/`
+cnis="$?"
+        if [[ ( $c1 -gt 0 ) || (( $cnis -eq 0 )) ]]
 	then
-          if [[ $c == "calico" ]]
+          if [[ $c = "calico" ]]
 	  then 
 	   c2=`ps -ef | grep felix | grep -v grep | wc -l`
 	   c3=`ps -ef |grep confd | grep -v grep | wc -l`  
@@ -115,11 +117,18 @@ c1=`ps -ef | grep $c | grep -v grep | wc -l`
            else
 		  echo "The process related to calico that are running are "
 	   fi
+           break
+         elif [[ (( $c = "flannel" )) ]]
+         then
+		 if [[ (( $cnis -eq 0 )) ]]
+		 then
+		     echo "$c is up and running"
+		 break
+		 fi
          else
-		 echo "$c is up and running"
-         fi
+            echo "CNI is not available"	 
+        fi
 	fi
-
 done
 
 }
