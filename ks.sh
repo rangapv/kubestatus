@@ -198,7 +198,7 @@ cc=0
 echo ""
 for cd in ${c[@]}
 do
-cw=$(which $cd)
+cw=`which $cd >/dev/null 2>&1`
 cs="$?"
 if [[ (( $cs -eq 0 )) ]]
 then
