@@ -13,6 +13,8 @@ status1=0
 nodef=0
 declare -A arra
 declare -A mycomp
+declare -A compverr
+# USe above is required
 
 component() {
 echo ""
@@ -29,6 +31,14 @@ do
      status1=1
      fi
      arra[$i]=$status1
+     for k in "${compver[@]}"
+     do
+       rets=$(ps -ef |grep $k | awk '{ split($0,a," ") ; print a[8] }' | grep -v grep | grep $k | wc -l)
+       if  [[ (( $rets -ge 1 )) ]]
+       then 
+          compverr[$k]=$status1
+       fi
+     done
      status1=0
 done
 echo ""
@@ -134,43 +144,40 @@ then
 else
     echo "Cannot determine the Cloud Platform"
 fi    
-
 }
 
 myversion() {
 echo ""
-declare -A arrb
 verarray=("$@")
 myprint1 Component-Version
 #myprint1 $h
 awk -F: 'BEGIN{printf "%-10s %-25s %-50s \n", "Component   ", "Install-Path", "Version-Info"
                printf "%-10s %-25s %-50s \n", "------------", "------------", "------------"}'
-for n in ${verarray[@]}
+for n in "${verarray[@]}"
 do
-for h in "${mastera[@]}"
-do
-if [[ ( ${h} = "$n" ) && ( ${arra[$h]} -eq 1 ) ]] 
-then
+  for h in "${!compverr[@]}"
+  do
+      if [[ ( "${h}" = $n ) && ( ${compverr[$h]} -eq 1 ) ]] 
+      then
 #	echo "$h is installed in `which $h`"
 #	echo "$h version is `$h --version`"
         whch=`which $h`
 	whv=`$h --version`
         awk -F: -v h2="$h" -v h1="$whch" -v whv="$whv" 'BEGIN{printf "%-10s %-25s %-50s \n" , h2, h1, whv}'
 
-fi	   
-done
+      fi	   
+  done
 done
 echo ""
 }
 
-
+#This function exists bcos the componenets give version sometimes as version/--version
 mycompversion() {
 echo ""
 awk -F: 'BEGIN{printf "%-10s %-35s \n", "Component   ", "Version-Info"
                printf "%-10s %-35s \n", "------------", "------------------------"}'
 if [[ ( "$#" -eq 0 ) ]] 
 then
-	
 for n in "${!mycomp[@]}"
 do
 	v=`$n ${mycomp[$n]}`
@@ -323,6 +330,7 @@ myrunc
 #myprint1 Component-Statistics 
 #component "${mastera[@]}"
 
+compver=( kubelet dockerd containerd )
 myprint1 Cloud-Environment
 mycloud
 bpf
@@ -339,7 +347,6 @@ then
  myprint1 Component-Statistics 
  component "${mastera[@]}"
  compstat "${mastera[@]}"
- 
  if [[ (( $corecounter -gt 6 )) ]]
  then
  declare -A arr
@@ -347,8 +354,9 @@ then
  myversion "${masterb[@]}"
  if [[ (( $counter -ge 5 )) ]]
  then
-  masterc=( kubelet kube-scheduler kube-controller-manager )
+  masterc=( kubelet kube-scheduler kube-apiserver kube-controller-manager )
   myconfig "${masterc[@]}"
+  mymcv=(kubelet kubectl) 
   mycompversion 
   mycni "${cnil[@]}" 
   myprint1 Node-Status
@@ -371,6 +379,7 @@ then
   mycni "${cnil[@]}" 
   mycvf=( kubelet kubectl )
   mycompversion "${mycvf[@]}" 
+  #mycompversion
   myprint1 Node-Status
   coreprint
   echo "There are a total \"$counter\" components of k8s running on this Box"
