@@ -342,12 +342,12 @@ master=$(ps -ef | grep kube | grep -v grep | grep -v vi | wc -l)
 if [[ (( $cc -eq 3 )) ]]
 then
  #mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd )
- mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard )
+ mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy dashboard )
  #mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard dockerd containerd )
  myprint1 Component-Statistics 
  component "${mastera[@]}"
  compstat "${mastera[@]}"
- if [[ (( $corecounter -gt 6 )) ]]
+ if [[ (( $corecounter -ge 5 )) ]]
  then
  declare -A arr
  masterb=( kubelet dockerd containerd)
@@ -366,7 +366,7 @@ then
   echo ""
  fi
 
- elif [[ (( $corecounter -gt 0 )) && (( $corecounter -lt 6 )) ]] 
+ elif [[ (( $corecounter -gt 0 )) && (( $corecounter -lt 5 )) ]] 
  then
  nodef=1
  declare -A arrb
@@ -377,7 +377,7 @@ then
   nodec=( kubelet )
   myconfig "${nodec[@]}"
   mycni "${cnil[@]}" 
-  mycvf=( kubelet kubectl )
+  mycvf=( kubelet kubectl kubeadm)
   mycompversion "${mycvf[@]}" 
   #mycompversion
   myprint1 Node-Status
