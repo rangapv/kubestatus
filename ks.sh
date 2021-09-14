@@ -98,9 +98,11 @@ do
 c1=`ps -ef | grep $c | grep -v grep | wc -l`
 cns=`sudo grep -r "$c" /etc/cni/`
 cnis="$?"
-        if [[ ( $c1 -gt 0 ) || (( $cnis -eq 0 )) ]]
+      if [[ (( $cnis -eq 0 )) ]]
+      then
+        if [[ $c = "calico" ]]
 	then
-          if [[ $c = "calico" ]]
+          if [[ ( $c1 -gt 0 ) || (( $cnis -eq 0 )) ]]
 	  then 
 	   c2=`ps -ef | grep felix | grep -v grep | wc -l`
 	   c3=`ps -ef |grep confd | grep -v grep | wc -l`  
@@ -118,6 +120,7 @@ cnis="$?"
 		  echo "The process related to calico that are running are "
 	   fi
            break
+          fi
          elif [[ (( $c = "flannel" )) ]]
          then
 		 if [[ (( $cnis -eq 0 )) ]]
@@ -127,8 +130,8 @@ cnis="$?"
 		 fi
          else
             echo "CNI is not available"	 
-        fi
-	fi
+         fi
+      fi	
 done
 
 }
