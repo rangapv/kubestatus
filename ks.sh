@@ -334,6 +334,7 @@ core1=( kubeadm kubelet kubectl )
 cnil=( calico flannel )
 mycomp[kubeadm]="version"
 mycomp[kubectl]="version"
+mycomp[helm]="version"
 mycomp[kubelet]="--version"
 myprint1 Core-Statistics 
 myprint
@@ -372,6 +373,8 @@ then
   myconfig "${masterc[@]}"
   mymcv=(kubelet kubectl) 
   mycompversion 
+  mypak=(helm)
+  mycompversion "${mypak[@]}"
   mycni "${cnil[@]}" 
   myprint1 Node-Status
   coreprint
@@ -393,7 +396,6 @@ then
   mycni "${cnil[@]}" 
   mycvf=( kubelet kubectl kubeadm)
   mycompversion "${mycvf[@]}" 
-  #mycompversion
   myprint1 Node-Status
   coreprint
   echo "There are a total \"$counter\" components of k8s running on this Box"
