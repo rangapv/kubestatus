@@ -80,8 +80,8 @@ then
 	myprint1 Not-running-Components
 echo "All these components are NOT RUNNING"
 echo ""
-echo "${str11[@]}"
-echo "Total component is ${#str11[@]}"
+echo "${str41[@]}"
+echo "Total component is ${#str41[@]}"
 #echo "$str4" |  awk '{split($0,a,","); for (i=1;i<length(a);i=i+2) print a[i] "," a[i+1]; print "Total = " length(a)-1 }'
 fi
 }
