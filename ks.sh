@@ -198,23 +198,31 @@ mycompversion() {
 echo ""
 awk -F: 'BEGIN{printf "%-10s %-35s \n", "Component   ", "Version-Info"
                printf "%-10s %-35s \n", "------------", "------------------------"}'
+chkright() {
+        n1="$@"
+	v=`$n1 ${mycomp[$n1]} 2> /dev/null`
+        vs="$?"
+       	if [[ $vs -ne 0 ]]
+        then
+		v="Not-Installed"
+	fi
+  	awk -F: -v h2="$n" -v h1="$v" 'BEGIN{printf "%-10s %-35s \n" , h2, h1}'
+        printf "\n"
+	#printf "The component $n \n is version $v \n"
+
+
+}
 if [[ ( "$#" -eq 0 ) ]] 
 then
 for n in "${!mycomp[@]}"
 do
-	v=`$n ${mycomp[$n]}`
-        awk -F: -v h2="$n" -v h1="$v" 'BEGIN{printf "%-10s %-35s \n" , h2, h1}'
-        printf "\n"
-	#printf "The component $n \n is version $v \n"
+	chkright $n
 done
 else
 mycv=("$@")
 for n in "${mycv[@]}"
 do
-	v=`$n ${mycomp[$n]}`
-        awk -F: -v h2="$n" -v h1="$v" 'BEGIN{printf "%-10s %-35s \n" , h2, h1}'
-        printf "\n"
-	#printf "The component $n \n is version $v \n"
+	chkright $n
 done
 fi
 
@@ -381,8 +389,8 @@ then
   myconfig "${masterc[@]}"
   mymcv=(kubelet kubectl) 
   mycompversion 
-  mypak=(helm)
-  mycompversion "${mypak[@]}"
+  #mypak=(helm)
+  #mycompversion "${mypak[@]}"
   mycni "${cnil[@]}" 
   myprint1 Node-Status
   coreprint
