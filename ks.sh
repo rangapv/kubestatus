@@ -265,7 +265,11 @@ echo ""
   for m in ${arrayc[@]}
   do
 	  compconfig=(`ps -ef | grep $m | grep "\-\-kubeconfig" | awk '{split($0,a,"--kubeconfig="); print a[2]}' | awk '{split($0,a," "); print a[1]}'`)
-         awk -F: -v config="$compconfig" -v m1="$m" 'BEGIN{ printf "%-10s %-25s \n", m1, config }' 
+          if [ "$m" = "kube-apiserver" ]
+	  then
+		  compconfig=("/etc/kubernetes/admin.conf")
+	  fi
+	  awk -F: -v config="$compconfig" -v m1="$m" 'BEGIN{ printf "%-10s %-25s \n", m1, config }' 
   done
   else
   for m in ${arrayc[@]}
@@ -342,8 +346,6 @@ then
         
 fi
 }
-
-
 
 
 core1=( kubeadm kubelet kubectl )
