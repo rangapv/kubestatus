@@ -15,6 +15,11 @@ declare -A arra
 declare -A mycomp
 declare -A compverr
 # USe above is required
+master=0
+node=0
+
+
+
 
 component() {
 echo ""
@@ -398,6 +403,7 @@ then
   coreprint
   echo "There are a total \"$counter\" components of k8s running on this Box"
   echo "Looks like this is the Master Node !!"
+  master=1
   echo ""
  fi
 
@@ -418,6 +424,7 @@ then
   coreprint
   echo "There are a total \"$counter\" components of k8s running on this Box"
   echo "Looks like this is the Worker Node !!"
+  node=1
   echo ""
  fi
  elif [[ (( $corecounter -eq 0 )) && (( $runcheck -eq 0 )) ]]
