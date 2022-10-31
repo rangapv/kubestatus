@@ -380,7 +380,7 @@ master=$(ps -ef | grep kube | grep -v grep | grep -v vi | wc -l)
 if [[ (( $cc -eq 3 )) ]]
 then
  #mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd )
- mastera=( kubelet kube-apiserver kube-controller-manager cloud-controller-manager kube-scheduler etcd kube-proxy dashboard )
+ mastera=( kubelet kube-apiserver kube-controller-manager cloud-controller-manager kube-scheduler etcd kube-proxy )
  #mastera=( kubelet kube-apiserver kube-controller-manager kube-scheduler etcd kube-proxy flanneld dashboard dockerd containerd )
  myprint1 Component-Statistics 
  component "${mastera[@]}"
