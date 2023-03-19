@@ -402,6 +402,11 @@ then
   myprint1 Node-Status
   coreprint
   echo "There are a total \"$counter\" components of k8s running on this Box"
+  if [[ ((${#str41[@]} -gt 0)) ]]
+  then 
+  echo "There is a total \"${#str41[@]}\" components of k8s NOT running on this Box"
+  echo "Time to Debug...."
+  fi
   echo "Looks like this is the Master Node !!"
   master=1
   echo ""
@@ -423,6 +428,11 @@ then
   myprint1 Node-Status
   coreprint
   echo "There are a total \"$counter\" components of k8s running on this Box"
+  if [[ ((${#str41[@]} -gt 0)) ]]
+  then 
+  echo "There is a total \"${#str41[@]}\" components of k8s NOT running on this Box"
+  echo "Time to Debug...."
+  fi
   echo "Looks like this is the Worker Node !!"
   node=1
   echo ""
