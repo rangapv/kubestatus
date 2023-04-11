@@ -456,3 +456,12 @@ else
 	myprint1 Node-Status
 	echo "The Cluster runtime is not ready"
 fi
+
+
+
+if [[ (($master -eq 1 )) || (( $node -eq 1 )) ]]
+then
+	echo "The following APPS are installed in the Cluster "
+	source <(curl -s https://raw.githubusercontent.com/rangapv/Rayapp/main/rayinstall.sh)
+fi
+
