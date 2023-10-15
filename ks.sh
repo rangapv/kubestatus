@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #Author: twitter-handle: @rangapv
 #        email-id: rangapv@yahoo.com
 set -E
@@ -461,7 +461,7 @@ fi
 
 if [[ (($master -eq 1 )) || (( $node -eq 1 )) ]]
 then
-	echo "The following APPS are installed in the Cluster "
-	source <(curl -s https://raw.githubusercontent.com/rangapv/Rayapp/main/rayinstall.sh)
+	echo "The following are the APPS STATUS installed in the Cluster "
+	source <(curl -s https://raw.githubusercontent.com/rangapv/Rayapp/main/rayinstall.sh | bash /dev/stdin raystat)
 fi
 
